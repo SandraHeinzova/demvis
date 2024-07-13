@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block title %}Menu{% endblock %}
+
+
+{% block content %}
+<main class="pb-auto">
+    <h1 class="mb-5 mt-5">VAŠE MENU</h1>
+    {% for meal in meal_list %}
+    <p>{{ meal.name }}</p>
+    {% endfor %}
+</main>
+{% endblock %}

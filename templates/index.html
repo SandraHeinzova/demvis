@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block title %}Demvis{% endblock %}
+
+{% block content %}
+<main class="px-3">
+    <h1 class="py-5 my-5">Když nevíš, co vařit.</h1>
+    <p class="lead">S námi bude Vaše domácí plánování obědů brnkačka!</p>
+    <p class="lead pt-4">
+        <a href="{{ url_for('generator') }}" class="btn btn-lg btn-light fw-bold border-white bg-white">Jdu do toho</a>
+    </p>
+    <div class="container pt-3">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div id="flash-popup" class="alert alert-danger" role="alert">
+            {% for message in messages %}
+            <div class="alert-heading">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</main>
+{% endblock %}

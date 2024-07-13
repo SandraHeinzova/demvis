@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block title %}Admin{% endblock %}
+
+
+{% block content %}
+<main class="pb-auto">
+    <h1 class="mb-3 mt-3">Záznamy</h1>
+    <div class="cards-container">
+        {% if waiting_records %}
+            {% for record in waiting_records %}
+            <div class="card-wrapper mb-1">
+                <div class="card border-dark ms-3" style="width:100%;">
+                    <div class="card-body text-dark info">
+                        <p>
+                            <strong><u>Název:</u></strong> <span id="name">{{ record.name }}</span>
+                            <strong><u>Druh masa:</u></strong> <span id="meat">{{ record.meat }}</span>
+                            <strong><u>Vegetariánské:</u></strong> <span id="vegetarian">{{ record.vegetarian }}</span>
+                            &nbsp; &nbsp;
+                        </p>
+                        <form method="post" action="/activate_record" id="record_handlers">
+                            <input type="hidden" name="record_id" value="{{ record.id }}">
+                            <button type="submit" name="action" value="activate" class="btn btn-sm btn-secondary">Aktivuj</button>
+                            <button type="button" class="btn btn-sm btn-secondary"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                    data-record-id="{{ record.id }}"
+                                    data-record-name="{{ record.name }}"
+                                    data-record-meat="{{ record.meat }}"
+                                    data-record-vegetarian="{{ record.vegetarian }}"
+                                    onclick="setModalContent(this)">Uprav
+                            </button>
+                            <button type="submit" name="action" value="delete" class="btn btn-sm btn-secondary">Smaž</button>
+                        </form>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Uprav záznam</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post" action="/activate_record">
+                                            <input type="hidden" name="record_id" id="recordIdInput">
+                                            <div class="mb-3">
+                                                <label for="nameInput" class="form-label">Název:</label>
+                                                <input type="text" class="form-control" id="nameInput" name="name" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="meatInput" class="form-label">Druh masa:</label>
+                                                <input type="text" class="form-control" id="meatInput" name="meat" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="vegetarianInput" class="form-label">Vegetariánské:</label>
+                                                <input type="text" class="form-control" id="vegetarianInput" name="vegetarian" required>
+                                            </div>
+                                            <button type="submit" name="action" value="edit" class="btn btn-sm btn-secondary">Ulož</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+
+                                function setModalContent(button) {
+                                    var recordId = button.getAttribute('data-record-id');
+                                    var recordName = button.getAttribute('data-record-name');
+                                    var recordMeat = button.getAttribute('data-record-meat');
+                                    var recordVegetarian = button.getAttribute('data-record-vegetarian');
+
+                                    document.getElementById('recordIdInput').value = recordId;
+                                    document.getElementById('nameInput').value = recordName;
+                                    document.getElementById('meatInput').value = recordMeat;
+                                    document.getElementById('vegetarianInput').value = recordVegetarian;
+                            }
+                            </script>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="card-wrapper mb-1">
+                <div class="card border-dark ms-3" style="width:100%;">
+                    <div class="card-body text-dark info">
+                        <h2>Vše aktivní</h2>
+                    </div>
+                </div>
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

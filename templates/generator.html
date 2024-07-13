@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block title %}Generátor{% endblock %}
+
+{% block content %}
+<main class="px-3 my-5">
+    {% if current_user.is_authenticated %}
+    <h1>Vítej <u>{{current_user.username.title()}}</u></h1>
+    {% endif %}
+    <h2>Vyber svoji variantu:</h2>
+    <div class="album py-5">
+        <div class="container mb-5">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <a href="{{ url_for('menu_example') }}">
+                            <svg class="bd-placeholder-img card-img-top" width="100%" height="197px">
+                                <image width="100%" height="100%" href="static/images/one.png"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <a href="{{ url_for('menu', value=4) }}">
+                            <svg class="bd-placeholder-img card-img-top" width="100%" height="197px">
+                                <image width="100%" height="100%" href="static/images/four.png"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <a href="{{ url_for('menu', value=7) }}">
+                            <svg class="bd-placeholder-img card-img-top" width="100%" height="197px">
+                                <image width="100%" height="100%" href="static/images/seven.png"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block title %}Přihlášení{% endblock %}
+
+{% block content %}
+<main class="pb-auto">
+    <h1 class="mb-5 mt-5">Přihlas se</h1>
+    <form method="post" style="width: 500px" class="centered">
+        {{ render_form(form) }}
+    </form>
+    <div class="container pt-3">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div id="flash-popup" class="alert alert-danger" role="alert">
+            {% for message in messages %}
+            <div class="alert-heading">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+    <p class="pt-4">Ještě nemáš účet? <a href="{{ url_for('register') }}" class="anchor_tag">Registruj se.</a></p>
+</main>
+{% endblock %}

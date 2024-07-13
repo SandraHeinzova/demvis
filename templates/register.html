@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block title %}Registrace{% endblock %}
+
+{% block content %}
+<main class="pb-auto">
+    <h1 class="mb-5 mt-5">Registruj se</h1>
+    <form method="post" style="width: 500px" class="centered">
+        {{ render_form(form) }}
+    </form>
+    <p class="pt-4">Už máš účet? <a href="{{ url_for('login') }}" class="anchor_tag">Přihlas se.</a></p>
+</main>
+{% endblock %}
