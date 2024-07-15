@@ -16,10 +16,10 @@
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="mb-5">
         <div>
-            <h3 class="float-md-start mb-0">Demvis</h3>
+            <h3 class="float-md-start mb-0">
+                <a class="nav-link fw-bold py-1 px-0"
+                   href="{{ url_for('home') }}">Demvis</a></h3>
             <nav class="nav nav-masthead justify-content-center float-md-end">
-                <a class="nav-link fw-bold py-1 px-0 {% if active_page == 'home' %}active{% endif %}"
-                   href="{{ url_for('home') }}">Domů</a>
                 <a class="nav-link fw-bold py-1 px-O {% if active_page == 'generator' %}active{% endif %}"
                    href="{{ url_for('generator') }}">Menu</a>
                 {% if not current_user.is_authenticated %}
