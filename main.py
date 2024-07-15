@@ -164,7 +164,7 @@ def activate_record():
 def admin():
     waiting_records = db.session.execute(
         select(Meal).where(Meal.active == False)).scalars().all()
-    return render_template("admin.html", waiting_records=waiting_records)
+    return render_template("admin.html", waiting_records=waiting_records, active_page="admin")
 
 
 @app.route("/logout")
