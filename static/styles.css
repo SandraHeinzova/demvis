@@ -86,3 +86,10 @@ body {
     background-color: #F5F5DC;
     border: none;
 }
+
+.menu-line {
+   background-color: #c4c4b0 !important;
+   text-align: left;
+   width: 500px;
+   border: none !important;
+}
