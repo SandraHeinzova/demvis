@@ -12,7 +12,7 @@
     <div class="container pt-3">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <div id="flash-popup" class="alert alert-danger" role="alert">
+        <div id="flash-popup" class="alert alert-info" role="alert">
             {% for message in messages %}
             <div class="alert-heading">{{ message }}</div>
             {% endfor %}
