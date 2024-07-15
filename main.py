@@ -159,6 +159,12 @@ def activate_record():
     return redirect(url_for('admin'))
 
 
+@app.route("/profile")
+@login_required
+def profile():
+    return render_template("profile.html", active_page="profile")
+
+
 @app.route("/admin")
 @admin_only
 def admin():

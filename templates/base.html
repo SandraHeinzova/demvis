@@ -28,6 +28,8 @@
                 {% else %}
                 <a class="nav-link fw-bold py-1 px-0 {% if active_page == 'add_new' %}active{% endif %}"
                    href="{{ url_for('add_new') }}">Přidej</a>
+                <a class="nav-link fw-bold py-1 px-0 {% if active_page == 'profile' %}active{% endif %}"
+                   href="{{ url_for('profile') }}">Profil</a>
                 <a class="nav-link fw-bold py-1 px-0 {% if active_page == 'logout' %}active{% endif %}"
                    href="{{ url_for('logout') }}">Odhlásit</a>
                 {% endif %}
