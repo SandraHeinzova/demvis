@@ -93,3 +93,11 @@ body {
    width: 500px;
    border: none !important;
 }
+
+.form-check {
+    text-align: left !important;
+}
+
+.form-check-label {
+    margin-left: 10px; /* Adjust the value as needed */
+}
