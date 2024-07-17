@@ -39,27 +39,27 @@ class Meal(Base):
 class UserPreferences(Base):
     __tablename__ = "preferences"
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     vegetarian = db.Column(db.Boolean, default=False)
     no_beef = db.Column(db.Boolean, default=False)
     no_chicken = db.Column(db.Boolean, default=False)
     no_pork = db.Column(db.Boolean, default=False)
 
 
-# dummy_records = [
-#     Meal(name="Krupicová kaše", vegetarian=True, active=True),
-#     Meal(name="Kuřecí kousky ve smetanové omáčce", meat="Kuřecí", vegetarian=False, active=True),
-#     Meal(name="Kuřecí kung-pao", meat="Kuřecí", vegetarian=False, active=True),
-#     Meal(name="Trhané vepřové", meat="Vepřové", vegetarian=False, active=True),
-#     Meal(name="Buchtičky se šodó", vegetarian=True, active=True),
-#     Meal(name="Koprová omáčka", meat="Hovězí", vegetarian=False, active=True),
-#     Meal(name="Rajská omáčka", meat="Hovězí", vegetarian=False, active=True),
-#     Meal(name="Nudle s mákem", vegetarian=True, active=True),
-#     Meal(name="Kuřecí na smetaně", meat="Kuřecí", vegetarian=False, active=False),
-#     Meal(name="Rizoto", meat="Kuřecí", vegetarian=False, active=True),
-#     Meal(name="Smažený sýr", vegetarian=True, active=True),
-#     Meal(name="Ovocné knedlíky", vegetarian=True, active=True),
-#     Meal(name="Pečené kuře", meat="Kuřecí", vegetarian=False, active=False),
-#     Meal(name="Vepřové na houbách", meat="Vepřové", vegetarian=False, active=False),
-#     Meal(name="Svíčková na smetaně", meat="Hovězí", vegetarian=False, active=True)
-# ]
+dummy_records = [
+    Meal(name="Krupicová kaše", vegetarian=True, active=True),
+    Meal(name="Kuřecí kousky ve smetanové omáčce", meat="Kuřecí", vegetarian=False, active=True),
+    Meal(name="Kuřecí kung-pao", meat="Kuřecí", vegetarian=False, active=True),
+    Meal(name="Trhané vepřové", meat="Vepřové", vegetarian=False, active=True),
+    Meal(name="Buchtičky se šodó", vegetarian=True, active=True),
+    Meal(name="Koprová omáčka", meat="Hovězí", vegetarian=False, active=True),
+    Meal(name="Rajská omáčka", meat="Hovězí", vegetarian=False, active=True),
+    Meal(name="Nudle s mákem", vegetarian=True, active=True),
+    Meal(name="Kuřecí na smetaně", meat="Kuřecí", vegetarian=False, active=False),
+    Meal(name="Rizoto", meat="Kuřecí", vegetarian=False, active=True),
+    Meal(name="Smažený sýr", vegetarian=True, active=True),
+    Meal(name="Ovocné knedlíky", vegetarian=True, active=True),
+    Meal(name="Pečené kuře", meat="Kuřecí", vegetarian=False, active=False),
+    Meal(name="Vepřové na houbách", meat="Vepřové", vegetarian=False, active=False),
+    Meal(name="Svíčková na smetaně", meat="Hovězí", vegetarian=False, active=True)
+]

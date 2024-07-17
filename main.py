@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap5
 from sqlalchemy import select, func
-from models import Meal, User, db
+from models import Meal, User, db, UserPreferences
 # from models import dummy_records
 from forms import LoginForm, NewMealForm, RegisterForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -159,10 +159,31 @@ def activate_record():
     return redirect(url_for('admin'))
 
 
-@app.route("/profile")
+@app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-    return render_template("profile.html", active_page="profile")
+    if request.method == "POST":
+        vegetarian = "only_vegetarian" in request.form
+        beef = "no_beef" in request.form
+        chicken = "no_chicken" in request.form
+        pork = "no_pork" in request.form
+
+        preferences = db.session.query(UserPreferences).filter_by(user_id=current_user.id).first()
+
+        if not preferences:
+            preferences = UserPreferences(user_id=current_user.id)
+            db.session.add(preferences)
+
+        preferences.vegetarian = vegetarian
+        preferences.no_beef = beef
+        preferences.no_chicken = chicken
+        preferences.no_pork = pork
+        db.session.commit()
+
+        return redirect(url_for("profile"))
+
+    preferences = db.session.query(UserPreferences).filter_by(user_id=current_user.id).first()
+    return render_template("profile.html", active_page="profile", preferences=preferences)
 
 
 @app.route("/admin")
