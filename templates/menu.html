@@ -5,11 +5,21 @@
 
 {% block content %}
 <main class="pb-auto">
-    <h1 class="mb-5 mt-5">Vaše menu</h1>
+    <h1 class="mb-5 mt-4">Vaše menu</h1>
     <ul class="list-group ps-5 ms-4">
         {% for meal in meal_list %}
         <li class="list-group-item menu-line">
             {{ meal.name }}
+            <form action="/favorite" method="post" style="display:inline;">
+                <input type="hidden" name="user_id" value="1">
+                <input type="hidden" name="item_id" value="">
+                <button type="submit" class="favorite">❤️</button>
+            </form>
+            <form action="/unfavorite" method="post" style="display:inline;">
+                <input type="hidden" name="user_id" value="1">
+                <input type="hidden" name="item_id" value="">
+                <button type="submit" class="unfavorite">💔</button>
+            </form>
         </li>
         {% endfor %}
     </ul>

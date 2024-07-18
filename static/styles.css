@@ -28,7 +28,7 @@
 }
 
 .hidden {
-            display: none;
+    display: none;
         }
 
 body {
@@ -91,7 +91,9 @@ body {
    background-color: #c4c4b0 !important;
    text-align: left;
    width: 500px;
-   border: none !important;
+   display: flex !important;
+   justify-content: space-between !important;
+   align-items: center;
 }
 
 .form-check {
@@ -99,5 +101,17 @@ body {
 }
 
 .form-check-label {
-    margin-left: 10px; /* Adjust the value as needed */
+    margin-left: 10px;
+}
+
+.favorite {
+   border: none !important;
+   background-color: inherit;
+   font-size: 1.2em;
+}
+
+.unfavorite {
+   border: none !important;
+   background-color: inherit;
+   font-size: 1.2em;
 }
