@@ -2,7 +2,7 @@ from functools import wraps
 from flask import Flask, render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap5
-from sqlalchemy import select, func
+from sqlalchemy import select, func, or_
 from models import Meal, User, db, UserPreferences
 # from models import dummy_records
 from forms import LoginForm, NewMealForm, RegisterForm
@@ -80,8 +80,24 @@ def menu_example():
 @login_required
 def menu():
     value = request.args.get("value")
-    meals = db.session.execute(
-        select(Meal).order_by(func.random()).limit(int(value)).where(Meal.active == True)).scalars().all()
+    user_preferences = db.session.query(UserPreferences).filter_by(user_id=current_user.id).first()
+
+    query = select(Meal).order_by(func.random()).limit(int(value)).where(Meal.active)
+
+    if user_preferences.no_chicken:
+        query = query.where(or_(Meal.meat != 'Kuřecí', Meal.vegetarian))
+
+    if user_preferences.no_beef:
+        query = query.where(or_(Meal.meat != 'Hovězí', Meal.vegetarian))
+
+    if user_preferences.no_pork:
+        query = query.where(or_(Meal.meat != 'Vepřové', Meal.vegetarian))
+
+    if user_preferences.vegetarian:
+        query = query.where(Meal.vegetarian)
+
+    meals = db.session.execute(query).scalars().all()
+
     return render_template("menu.html", meal_list=meals)
 
 
