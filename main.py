@@ -1,9 +1,9 @@
 from functools import wraps
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap5
 from sqlalchemy import select, func, or_
-from models import Meal, User, db, UserPreferences
+from models import Meal, User, db, UserPreferences, Favorite
 # from models import dummy_records
 from forms import LoginForm, NewMealForm, RegisterForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -102,7 +102,32 @@ def menu():
 
     meals = db.session.execute(query).scalars().all()
 
-    return render_template("menu.html", meal_list=meals)
+    favorites_query = db.session.query(Favorite).filter_by(user_id=current_user.id).all()
+    favorite_meals = {fav.meal_id for fav in favorites_query}
+
+    return render_template("menu.html", meal_list=meals, favorite_meals=favorite_meals)
+
+
+@app.route("/favorite", methods=["POST"])
+@login_required
+def add_to_favorites():
+    meal_id = request.form.get("meal_id")
+    user_id = request.form.get("user_id")
+    favorite_meal = Favorite(user_id=user_id, meal_id=meal_id)
+    db.session.add(favorite_meal)
+    db.session.commit()
+    return jsonify({'status': 'success', 'message': 'Úspěšně přidáno k oblíbeným'})
+
+
+@app.route("/unfavorite", methods=["POST"])
+@login_required
+def remove_favorites():
+    meal_id = request.form.get("meal_id")
+    user_id = request.form.get("user_id")
+    favorite_meal = db.session.query(Favorite).filter_by(user_id=user_id, meal_id=meal_id).first()
+    db.session.delete(favorite_meal)
+    db.session.commit()
+    return jsonify({'status': 'success', 'message': 'Úspěšně odebráno z oblíbených'})
 
 
 @app.route("/register", methods=["POST", "GET"])

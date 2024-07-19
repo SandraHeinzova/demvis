@@ -10,18 +10,74 @@
         {% for meal in meal_list %}
         <li class="list-group-item menu-line">
             {{ meal.name }}
-            <form action="/favorite" method="post" style="display:inline;">
-                <input type="hidden" name="user_id" value="1">
-                <input type="hidden" name="item_id" value="">
-                <button type="submit" class="favorite">❤️</button>
-            </form>
-            <form action="/unfavorite" method="post" style="display:inline;">
-                <input type="hidden" name="user_id" value="1">
-                <input type="hidden" name="item_id" value="">
-                <button type="submit" class="unfavorite">🩶</button>
-            </form>
+            <div>
+                {% if meal.id not in favorite_meals %}
+                <button type="button" class="favorite" data-url="/favorite" data-meal-id="{{ meal.id }}"
+                        data-user-id="{{ current_user.id }}">❤️
+                </button>
+                {% else %}
+                <button type="button" class="unfavorite" data-url="/unfavorite" data-meal-id="{{ meal.id }}"
+                        data-user-id="{{ current_user.id }}">🩶
+                </button>
+                {% endif %}
+            </div>
         </li>
         {% endfor %}
     </ul>
 </main>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.favorite').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                var url = this.getAttribute('data-url');
+                var mealId = this.getAttribute('data-meal-id');
+                var userId = this.getAttribute('data-user-id');
+                var formData = new FormData();
+                formData.append('meal_id', mealId);
+                formData.append('user_id', userId);
+                ajaxCall(url, formData, this);
+            });
+        });
+
+        document.querySelectorAll('.unfavorite').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                var url = this.getAttribute('data-url');
+                var mealId = this.getAttribute('data-meal-id');
+                var userId = this.getAttribute('data-user-id');
+                var formData = new FormData();
+                formData.append('meal_id', mealId);
+                formData.append('user_id', userId);
+                ajaxCall(url, formData, this);
+            });
+        });
+    });
+
+    function ajaxCall(url, formData, button) {
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert(data.message);
+                if (button.classList.contains('favorite')) {
+                    button.innerHTML = '🩶'; // Změna ikony na 🩶
+                    button.classList.remove('favorite');
+                    button.classList.add('unfavorite');
+                } else if (button.classList.contains('unfavorite')) {
+                    button.innerHTML = '❤️'; // Změna ikony na ❤️
+                    button.classList.remove('unfavorite');
+                    button.classList.add('favorite');
+                }
+            } else {
+                alert('Failed to update favorites');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
 {% endblock %}
