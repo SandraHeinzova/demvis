@@ -82,19 +82,23 @@ def menu():
     value = request.args.get("value")
     user_preferences = db.session.query(UserPreferences).filter_by(user_id=current_user.id).first()
 
-    query = select(Meal).order_by(func.random()).limit(int(value)).where(Meal.active)
+    if user_preferences:
+        query = select(Meal).order_by(func.random()).limit(int(value)).where(Meal.active)
 
-    if user_preferences.no_chicken:
-        query = query.where(or_(Meal.meat != 'Kuřecí', Meal.vegetarian))
+        if user_preferences.no_chicken:
+            query = query.where(or_(Meal.meat != 'Kuřecí', Meal.vegetarian))
 
-    if user_preferences.no_beef:
-        query = query.where(or_(Meal.meat != 'Hovězí', Meal.vegetarian))
+        if user_preferences.no_beef:
+            query = query.where(or_(Meal.meat != 'Hovězí', Meal.vegetarian))
 
-    if user_preferences.no_pork:
-        query = query.where(or_(Meal.meat != 'Vepřové', Meal.vegetarian))
+        if user_preferences.no_pork:
+            query = query.where(or_(Meal.meat != 'Vepřové', Meal.vegetarian))
 
-    if user_preferences.vegetarian:
-        query = query.where(Meal.vegetarian)
+        if user_preferences.vegetarian:
+            query = query.where(Meal.vegetarian)
+
+    else:
+        query = select(Meal).order_by(func.random()).limit(int(value)).where(Meal.active)
 
     meals = db.session.execute(query).scalars().all()
 
