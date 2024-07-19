@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer, Boolean, CheckConstraint
+from sqlalchemy import String, Integer, Boolean, CheckConstraint, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
@@ -38,12 +38,22 @@ class Meal(Base):
 
 class UserPreferences(Base):
     __tablename__ = "preferences"
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    vegetarian = db.Column(db.Boolean, default=False)
-    no_beef = db.Column(db.Boolean, default=False)
-    no_chicken = db.Column(db.Boolean, default=False)
-    no_pork = db.Column(db.Boolean, default=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
+    vegetarian: Mapped[bool] = mapped_column(default=False)
+    no_beef: Mapped[bool] = mapped_column(default=False)
+    no_chicken: Mapped[bool] = mapped_column(default=False)
+    no_pork: Mapped[bool] = mapped_column(default=False)
+
+
+class Favorite(Base):
+    __tablename__ = "favorites"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    meal_id: Mapped[int] = mapped_column(ForeignKey("meals.id"), nullable=False)
+
+    user = db.relationship("User", backref="favorites")
+    meal = db.relationship("Meal", backref="favorites")
 
 
 dummy_records = [
