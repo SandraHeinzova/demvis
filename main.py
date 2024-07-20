@@ -45,7 +45,12 @@ def admin_only(f):
 
 @app.route("/")
 def home():
-    return render_template("index.html", active_page="home")
+    active_meals = len(db.session.execute(select(Meal).where(Meal.active)).scalars().all())
+    waiting_meals =len(db.session.execute(select(Meal).where(Meal.active == False)).scalars().all())
+    return render_template("index.html",
+                           active_page="home",
+                           active_meals=active_meals,
+                           waiting_meals=waiting_meals)
 
 
 @app.route("/generator")
