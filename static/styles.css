@@ -7,13 +7,13 @@
   background-color: #F5F5DC !important;
 }
 
-.btn-md {
+.btn-md, .btn-lg {
   background-color: #F5F5DC !important;
   border-color: #F5F5DC !important;
   color: black !important;
 }
 
-.btn-md:hover {
+.btn-md:hover, .btn-lg:hover {
   background-color: #babaa0 !important;
 }
 

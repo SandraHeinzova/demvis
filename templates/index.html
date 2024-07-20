@@ -6,10 +6,10 @@
 <main class="px-3">
     <h1 class="py-5 my-5">Když nevíš, co vařit.</h1>
     <p class="lead">Teď už bude Vaše domácí plánování obědů brnkačka!</p>
-    <p class="lead pt-4">
-        <a href="{{ url_for('generator') }}" class="btn btn-lg btn-light fw-bold border-white bg-white">Jdu do toho</a>
+    <p class="lead pt-3">
+        <a href="{{ url_for('generator') }}" class="btn btn-lg fw-bold">Jdu do toho</a>
     </p>
-    <div class="row justify-content-around mt-5 pt-3">
+    <div class="row justify-content-around mt-5 pt-5">
         <div class="col-4"><strong>Aktivních jídel: {{ active_meals }}</strong></div>
         <div class="col-4"><strong>Čeká na schválení: {{ waiting_meals }}</strong></div>
     <div class="container pt-3">
