@@ -8,11 +8,24 @@
     <h1 class="mb-5 mt-5">Profil</h1>
     <div class="row justify-content-around">
         <div class="col-4">
-            One of two columns
+            <h2>Oblíbená jídla:</h2>
+            <div class="card-wrapper mb-1 mt-5 favorites-container">
+                {% if fav_meals %}
+                {% for meal in fav_meals %}
+                <p class="meal-item"> {{meal.name}}
+                    <button type="button" class="unfavorite" data-url="/unfavorite" data-meal-id="{{ meal.id }}"
+                            data-user-id="{{ current_user.id }}">❤️
+                    </button>
+                </p>
+                {% endfor %}
+                {% else %}
+                <p id="no-favorites" class="pe-4 me-3">Žádná oblíbená jídla</p>
+                {% endif %}
+            </div>
         </div>
         <div class="col-4">
             <h2>Preference:</h2>
-            <form method="post">
+            <form method="post" class="mt-5">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="true" id="only_vegetarian"
                            name="only_vegetarian" {% if preferences and preferences.vegetarian %}checked{% endif %}>
@@ -46,4 +59,53 @@
         </div>
     </div>
 </main>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var buttons = document.querySelectorAll('.unfavorite');
+
+        buttons.forEach(function(button) {
+
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                var url = this.getAttribute('data-url');
+                var mealId = this.getAttribute('data-meal-id');
+                var userId = this.getAttribute('data-user-id');
+                var formData = new FormData();
+                formData.append('meal_id', mealId);
+                formData.append('user_id', userId);
+
+                fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin',
+                })
+                .then(response => response.json())
+                .then(data => {
+
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        var parent = button.parentElement;
+                        parent.remove();  // odebere element <p> obsahující jídlo a tlačítko
+
+                        var remainingItems = document.querySelectorAll('.favorites-container .meal-item');
+                        if (remainingItems.length === 0) {
+                            var noFavoritesMsg = document.createElement('p');
+                            noFavoritesMsg.id = 'no-favorites';
+                            noFavoritesMsg.className = 'pe-4 me-3';
+                            noFavoritesMsg.textContent = 'Žádná oblíbená jídla';
+                            document.querySelector('.favorites-container').appendChild(noFavoritesMsg);
+                        }
+                    } else {
+                        alert('Failed to update favorites');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error); // Debug: Zobrazit chybu
+                });
+            });
+        });
+    });
+</script>
 {% endblock %}

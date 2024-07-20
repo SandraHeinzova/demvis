@@ -228,7 +228,10 @@ def profile():
         return redirect(url_for("profile"))
 
     preferences = db.session.query(UserPreferences).filter_by(user_id=current_user.id).first()
-    return render_template("profile.html", active_page="profile", preferences=preferences)
+
+    favorite_meals = db.session.query(Meal).join(Favorite).filter(Favorite.user_id == current_user.id).all()
+
+    return render_template("profile.html", active_page="profile", preferences=preferences, fav_meals=favorite_meals)
 
 
 @app.route("/admin")
