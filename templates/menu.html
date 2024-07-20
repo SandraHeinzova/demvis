@@ -13,11 +13,11 @@
             <div>
                 {% if meal.id not in favorite_meals %}
                 <button type="button" class="favorite" data-url="/favorite" data-meal-id="{{ meal.id }}"
-                        data-user-id="{{ current_user.id }}">❤️
+                        data-user-id="{{ current_user.id }}">🩶
                 </button>
                 {% else %}
                 <button type="button" class="unfavorite" data-url="/unfavorite" data-meal-id="{{ meal.id }}"
-                        data-user-id="{{ current_user.id }}">🩶
+                        data-user-id="{{ current_user.id }}">❤️
                 </button>
                 {% endif %}
             </div>
@@ -27,20 +27,7 @@
 </main>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.favorite').forEach(function(button) {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-                var url = this.getAttribute('data-url');
-                var mealId = this.getAttribute('data-meal-id');
-                var userId = this.getAttribute('data-user-id');
-                var formData = new FormData();
-                formData.append('meal_id', mealId);
-                formData.append('user_id', userId);
-                ajaxCall(url, formData, this);
-            });
-        });
-
-        document.querySelectorAll('.unfavorite').forEach(function(button) {
+        document.querySelectorAll('.favorite, .unfavorite').forEach(function(button) {
             button.addEventListener('click', function(event) {
                 event.preventDefault();
                 var url = this.getAttribute('data-url');
@@ -65,13 +52,15 @@
             if (data.status === 'success') {
                 alert(data.message);
                 if (button.classList.contains('favorite')) {
-                    button.innerHTML = '🩶'; // Změna ikony na 🩶
+                    button.innerHTML = '❤️'; // Změna ikony na ❤️
                     button.classList.remove('favorite');
                     button.classList.add('unfavorite');
+                    button.setAttribute('data-url', '/unfavorite');
                 } else if (button.classList.contains('unfavorite')) {
-                    button.innerHTML = '❤️'; // Změna ikony na ❤️
+                    button.innerHTML = '🩶️'; // Změna ikony na 🩶
                     button.classList.remove('unfavorite');
                     button.classList.add('favorite');
+                    button.setAttribute('data-url', '/favorite');
                 }
             } else {
                 alert('Failed to update favorites');
