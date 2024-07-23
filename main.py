@@ -1,5 +1,8 @@
+import os
+import smtplib
+from email.message import EmailMessage
 from functools import wraps
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap5
 from sqlalchemy import select, func, or_
@@ -7,6 +10,11 @@ from models import Meal, User, db, UserPreferences, Favorite
 # from models import dummy_records
 from forms import LoginForm, NewMealForm, RegisterForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+import pdfkit
+
+
+days = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota", "Neděle"]
+
 
 app = Flask(__name__)
 app.secret_key = "my-secretkey"
@@ -106,6 +114,9 @@ def menu():
         query = select(Meal).order_by(func.random()).limit(int(value)).where(Meal.active)
 
     meals = db.session.execute(query).scalars().all()
+
+    meals_dict = [{"day": day, "meal": meal.name} for day, meal in zip(days, meals)]
+    session["menu"] = meals_dict
 
     favorites_query = db.session.query(Favorite).filter_by(user_id=current_user.id).all()
     favorite_meals = {fav.meal_id for fav in favorites_query}
@@ -239,6 +250,38 @@ def profile():
     return render_template("profile.html", active_page="profile", preferences=preferences, fav_meals=favorite_meals)
 
 
+@app.route("/send", methods=["GET", "POST"])
+@login_required
+def send():
+    if request.method == "POST":
+        print(current_user.email)
+        menu_data = session.get("menu")
+
+        rendered_menu = render_template("send_menu.html", menu_data=menu_data)
+
+        pdfkit.from_string(rendered_menu, "test_menu.pdf")
+        send_to = current_user.email
+        send_from = "info.demvis@gmail.com"
+        email_password = os.environ.get("DEMVIS_SMTPLIB")
+        msg = EmailMessage()
+        msg["From"] = send_from
+        msg["Subject"] = "Vaše Menu"
+        msg["To"] = send_to
+        msg.set_content("Demvis Menu")
+
+        with open("test_menu.pdf", "rb") as f:
+            pdf_data = f.read()
+
+        msg.add_attachment(pdf_data, maintype='application', subtype='pdf', filename="demvis_menu.pdf")
+
+        # with smtplib.SMTP("smtp.gmail.com") as connection:
+        #     connection.starttls()
+        #     connection.login(user=send_from, password=email_password)
+        #     connection.send_message(msg)
+
+        return jsonify({'status': 'success', 'message': 'Menu již letí do mailu'})
+
+
 @app.route("/admin")
 @admin_only
 def admin():
@@ -256,4 +299,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=3000)
+    app.run(debug=True, port=4000)
