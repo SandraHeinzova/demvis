@@ -5,7 +5,7 @@
 
 {% block content %}
 <main class="pb-auto">
-    <h1 class="mb-5 mt-4">Vaše menu</h1>
+    <h1 class="mb-4 mt-3">Vaše menu</h1>
     <ul class="list-group ps-5 ms-4">
         {% for meal in meal_list %}
         <li class="list-group-item menu-line">
@@ -24,12 +24,36 @@
         </li>
         {% endfor %}
     </ul>
+    <form id="menuForm" method="POST" action="/send">
+        <button type="submit" class="btn btn-md mt-3" id="submitButton">
+            Pošli
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+        </button>
+    </form>
+    <!-- Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Úspěch</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Menu už letí do mailu!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </main>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.favorite, .unfavorite').forEach(function(button) {
             button.addEventListener('click', function(event) {
-                event.preventDefault();
+                event.preventDefault(); // Zabraňuje výchozímu chování
                 var url = this.getAttribute('data-url');
                 var mealId = this.getAttribute('data-meal-id');
                 var userId = this.getAttribute('data-user-id');
@@ -39,34 +63,66 @@
                 ajaxCall(url, formData, this);
             });
         });
-    });
 
-    function ajaxCall(url, formData, button) {
-        fetch(url, {
-            method: 'POST',
-            body: formData,
-            credentials: 'same-origin'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                alert(data.message);
-                if (button.classList.contains('favorite')) {
-                    button.innerHTML = '❤️'; // Změna ikony na ❤️
-                    button.classList.remove('favorite');
-                    button.classList.add('unfavorite');
-                    button.setAttribute('data-url', '/unfavorite');
-                } else if (button.classList.contains('unfavorite')) {
-                    button.innerHTML = '🩶️'; // Změna ikony na 🩶
-                    button.classList.remove('unfavorite');
-                    button.classList.add('favorite');
-                    button.setAttribute('data-url', '/favorite');
+        document.getElementById('menuForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Zabraňuje výchozímu chování (přesměrování)
+            var formData = new FormData(this);
+            var submitButton = document.getElementById('submitButton');
+            var spinner = submitButton.querySelector('.spinner-border');
+
+            // Zobraz spinner a zakázat tlačítko
+            spinner.classList.remove('d-none');
+            submitButton.disabled = true;
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    var myModal = new bootstrap.Modal(document.getElementById('successModal'));
+                    myModal.show();
+                } else {
+                    alert('Failed to send PDF');
                 }
-            } else {
-                alert('Failed to update favorites');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
+            })
+            .catch(error => console.error('Error:', error))
+            .finally(() => {
+                // Skryj spinner a povol tlačítko
+                spinner.classList.add('d-none');
+                submitButton.disabled = false;
+            });
+        });
+
+        function ajaxCall(url, formData, button) {
+            fetch(url, {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    if (button.classList.contains('favorite')) {
+                        button.innerHTML = '❤️'; // Změna ikony na ❤️
+                        button.classList.remove('favorite');
+                        button.classList.add('unfavorite');
+                        button.setAttribute('data-url', '/unfavorite');
+                    } else if (button.classList.contains('unfavorite')) {
+                        button.innerHTML = '🩶️'; // Změna ikony na 🩶
+                        button.classList.remove('unfavorite');
+                        button.classList.add('favorite');
+                        button.setAttribute('data-url', '/favorite');
+                    }
+                } else {
+                    alert('Failed to update favorites');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
 </script>
 {% endblock %}
