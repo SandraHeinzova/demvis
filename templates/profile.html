@@ -25,7 +25,7 @@
         </div>
         <div class="col-4">
             <h2>Preference:</h2>
-            <form method="post" class="mt-5">
+            <form id="preferences-form" method="post" class="mt-5">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="true" id="only_vegetarian"
                            name="only_vegetarian" {% if preferences and preferences.vegetarian %}checked{% endif %}>
@@ -87,7 +87,7 @@
                     if (data.status === 'success') {
                         alert(data.message);
                         var parent = button.parentElement;
-                        parent.remove();  // odebere element <p> obsahující jídlo a tlačítko
+                        parent.remove();
 
                         var remainingItems = document.querySelectorAll('.favorites-container .meal-item');
                         if (remainingItems.length === 0) {
@@ -102,9 +102,28 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error); // Debug: Zobrazit chybu
+                    console.error('Error:', error);
                 });
             });
+        });
+
+        var preferencesForm = document.getElementById('preferences-form');
+
+        var originalPreferences = {};
+        var checkboxes = preferencesForm.querySelectorAll('.form-check-input');
+        checkboxes.forEach(function(checkbox) {
+            originalPreferences[checkbox.id] = checkbox.checked;
+        });
+
+        preferencesForm.addEventListener('submit', function(event) {
+            var confirmed = confirm('Opravdu chcete změnit preference?');
+            if (!confirmed) {
+                event.preventDefault();
+
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = originalPreferences[checkbox.id];
+                });
+            }
         });
     });
 </script>
