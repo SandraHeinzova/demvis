@@ -8,6 +8,7 @@ from flask_bootstrap import Bootstrap5
 from sqlalchemy import select, func, or_
 from models import Meal, User, db, UserPreferences, Favorite
 # from models import dummy_records
+from smtp_email import send_email
 from forms import LoginForm, NewMealForm, RegisterForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import pdfkit
@@ -254,30 +255,17 @@ def profile():
 @login_required
 def send():
     if request.method == "POST":
-        print(current_user.email)
         menu_data = session.get("menu")
 
         rendered_menu = render_template("send_menu.html", menu_data=menu_data)
 
-        pdfkit.from_string(rendered_menu, "test_menu.pdf")
+        pdfkit.from_string(rendered_menu, "menu.pdf")
         send_to = current_user.email
-        send_from = "info.demvis@gmail.com"
-        email_password = os.environ.get("DEMVIS_SMTPLIB")
-        msg = EmailMessage()
-        msg["From"] = send_from
-        msg["Subject"] = "Vaše Menu"
-        msg["To"] = send_to
-        msg.set_content("Demvis Menu")
 
-        with open("test_menu.pdf", "rb") as f:
+        with open("menu.pdf", "rb") as f:
             pdf_data = f.read()
 
-        msg.add_attachment(pdf_data, maintype='application', subtype='pdf', filename="demvis_menu.pdf")
-
-        # with smtplib.SMTP("smtp.gmail.com") as connection:
-        #     connection.starttls()
-        #     connection.login(user=send_from, password=email_password)
-        #     connection.send_message(msg)
+        send_email(send_to=send_to, pdf_data=pdf_data)
 
         return jsonify({'status': 'success', 'message': 'Menu již letí do mailu'})
 
