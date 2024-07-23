@@ -4,14 +4,18 @@
 
 {% block content %}
 <main class="px-3">
-    <h1 class="py-5 my-5">Když nevíš, co vařit.</h1>
-    <p class="lead">Teď už bude Vaše domácí plánování obědů brnkačka!</p>
+    <h1 class="py-4 my-4">Když nevíš, co vařit.</h1>
+    <p class="lead pt-3">Teď už bude Vaše domácí plánování obědů brnkačka!</p>
     <p class="lead pt-3">
         <a href="{{ url_for('generator') }}" class="btn btn-lg fw-bold">Jdu do toho</a>
     </p>
-    <div class="row justify-content-around mt-5 pt-5">
+    <p class="lead pt-3">
+        <a href="#" class="btn btn-md fw-bold mt-2" data-bs-toggle="modal" data-bs-target="#exampleModal">O projektu</a>
+    </p>
+    <div class="row justify-content-around mt-5 pt-4">
         <div class="col-4"><strong>Aktivních jídel: {{ active_meals }}</strong></div>
         <div class="col-4"><strong>Čeká na schválení: {{ waiting_meals }}</strong></div>
+    </div>
     <div class="container pt-3">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -22,6 +26,31 @@
         </div>
         {% endif %}
         {% endwith %}
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">O projektu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Jmenuji se Sandra, jsem manželka a mamka dvou dětí. Jako žena v domácnosti (na rodičáku)
+                        se často peru s vymýšlením jídelníčku pro celou rodinu.
+                        A většinou to končí tak, že točíme 10 jídel.</p>
+                    <p>Přišla jsem s nápadem, jak si toto alespoň trošku ulehčit.</p>
+                    <p>Projekt <strong>Demvis</strong> má za úkol náhodně vygenerovat obědové menu, buď s jiným
+                        jídlem na každý den, nebo s jídlem vždy na dva dny. Možnost je i nechat vygenerovat náhodně
+                        jedno náhradní jídlo. A protože jsme každý jiný, přílohy nechávám na každném z vás.</p>
+                    <p>Jsem v programování samouk a tento projekt slouží také k mému učení. Pokud najdeš nějaký problém,
+                        chybku, nebo budeš mít nápad, co by bylo fajn aby projekt uměl, neboj se a napiš mi! </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 {% endblock %}

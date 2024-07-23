@@ -116,40 +116,42 @@ body {
    font-size: 1.2em;
 }
 
-/* Styl pro modální okno */
 .modal-content {
-    background-color: #F5F5DC; /* Stejná barva jako pro .card a .btn-md */
-    border: 1px solid #babaa0; /* Barva odpovídající hover stavu tlačítek */
-    color: black; /* Text barva */
+    background-color: #F5F5DC;
+    border: 1px solid #babaa0;
+    color: black;
 }
 
 .modal-header {
-    border-bottom: 1px solid #babaa0; /* Oddělení záhlaví od těla */
-    background-color: #F5F5DC; /* Stejná barva jako pro .card a .btn-md */
-    color: black; /* Text barva */
+    border-bottom: 1px solid #babaa0;
+    background-color: #F5F5DC;
+    color: black;
 }
 
+.modal-footer {
+    border-top: none !important;
+}
+
+
 .modal-title {
-    font-size: 1.25rem; /* Uprav velikost písma */
+    font-size: 1.25rem;
 }
 
 .btn-close {
-    filter: invert(100%); /* Ujistit se, že tlačítko zavření je bílé */
+    filter: invert(100%);
 }
 
-/* Tlačítka modálního okna */
 .modal-footer .btn {
-    background-color: #F5F5DC; /* Stejná barva jako pro .btn-md */
-    border-color: #F5F5DC; /* Stejná barva jako pro .btn-md */
-    color: black; /* Text barva */
+    background-color: #F5F5DC;
+    border-color: #F5F5DC;
+    color: black;
 }
 
 .modal-footer .btn:hover {
-    background-color: #babaa0; /* Stejná barva jako pro hover tlačítek */
-    border-color: #babaa0; /* Stejná barva jako pro hover tlačítek */
+    background-color: #babaa0;
+    border-color: #babaa0;
 }
 
-/* Tělo modálního okna */
 .modal-body {
-    color: black; /* Text barva */
+    color: black;
 }
