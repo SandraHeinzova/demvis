@@ -1,4 +1,4 @@
-from wtforms import StringField
+from wtforms import StringField, PasswordField
 from wtforms.fields.choices import SelectField
 from wtforms.fields.simple import SubmitField
 from wtforms.validators import DataRequired, Email
@@ -14,12 +14,12 @@ class NewMealForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
-    password = StringField("Heslo", validators=[DataRequired()])
+    password = PasswordField("Heslo", validators=[DataRequired()])
     login = SubmitField("Přihlásit se")
 
 
 class RegisterForm(FlaskForm):
     username = StringField("Přezdívka", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired(), Email()])
-    password = StringField("Heslo", validators=[DataRequired()])
+    password = PasswordField("Heslo", validators=[DataRequired()], render_kw={"class": "password-input"})
     register = SubmitField("Registrovat se")
