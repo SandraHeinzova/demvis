@@ -101,7 +101,7 @@ def get_filtered_query(user_preferences, value):
         if user_preferences.vegetarian:
             query = query.where(Meal.vegetarian)
 
-        return query
+    return query
 
 
 @app.route("/menu")
