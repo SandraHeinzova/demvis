@@ -1,6 +1,3 @@
-import os
-import smtplib
-from email.message import EmailMessage
 from functools import wraps
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,9 +10,8 @@ from forms import LoginForm, NewMealForm, RegisterForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import pdfkit
 
-
 days = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota", "Neděle"]
-
+day_pairs = [["Pondělí", "Úterý"], ["Středa", "Čtvrtek"], ["Pátek", "Sobota"], ["Neděle"]]
 
 app = Flask(__name__)
 app.secret_key = "my-secretkey"
@@ -55,7 +51,7 @@ def admin_only(f):
 @app.route("/")
 def home():
     active_meals = len(db.session.execute(select(Meal).where(Meal.active)).scalars().all())
-    waiting_meals =len(db.session.execute(select(Meal).where(Meal.active == False)).scalars().all())
+    waiting_meals = len(db.session.execute(select(Meal).where(Meal.active == False)).scalars().all())
     return render_template("index.html",
                            active_page="home",
                            active_meals=active_meals,
@@ -90,15 +86,9 @@ def menu_example():
     return render_template("menu.html", meal_list=meals)
 
 
-@app.route("/menu")
-@login_required
-def menu():
-    value = request.args.get("value")
-    user_preferences = db.session.query(UserPreferences).filter_by(user_id=current_user.id).first()
-
+def get_filtered_query(user_preferences, value):
+    query = select(Meal).order_by(func.random()).limit(value).where(Meal.active)
     if user_preferences:
-        query = select(Meal).order_by(func.random()).limit(int(value)).where(Meal.active)
-
         if user_preferences.no_chicken:
             query = query.where(or_(Meal.meat != 'Kuřecí', Meal.vegetarian))
 
@@ -111,12 +101,28 @@ def menu():
         if user_preferences.vegetarian:
             query = query.where(Meal.vegetarian)
 
-    else:
-        query = select(Meal).order_by(func.random()).limit(int(value)).where(Meal.active)
+        return query
 
-    meals = db.session.execute(query).scalars().all()
 
-    meals_dict = [{"day": day, "meal": meal.name} for day, meal in zip(days, meals)]
+@app.route("/menu")
+@login_required
+def menu():
+    meals_dict = []
+    meals = []
+    value = int(request.args.get("value"))
+    user_preferences = db.session.query(UserPreferences).filter_by(user_id=current_user.id).first()
+
+    if value == 7:
+        query = get_filtered_query(user_preferences, value)
+        meals = db.session.execute(query).scalars().all()
+        meals_dict = [{"day": day, "meal": meal.name} for day, meal in zip(days, meals)]
+    elif value == 4:
+        query = get_filtered_query(user_preferences, value)
+        meals = db.session.execute(query).scalars().all()
+        for i, day_pair in enumerate(day_pairs):
+            for day in day_pair:
+                meals_dict.append({"day": day, "meal": meals[i].name})
+
     session["menu"] = meals_dict
 
     favorites_query = db.session.query(Favorite).filter_by(user_id=current_user.id).all()
@@ -265,7 +271,7 @@ def send():
         with open("menu.pdf", "rb") as f:
             pdf_data = f.read()
 
-        send_email(send_to=send_to, pdf_data=pdf_data)
+        # send_email(send_to=send_to, pdf_data=pdf_data)
 
         return jsonify({'status': 'success', 'message': 'Menu již letí do mailu'})
 
