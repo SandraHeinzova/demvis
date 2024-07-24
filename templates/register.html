@@ -1,15 +1,41 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
-{% from 'bootstrap5/form.html' import render_form %}
+{% from 'bootstrap5/form.html' import render_field %}
 
 {% block title %}Registrace{% endblock %}
 
 {% block content %}
 <main class="pb-auto">
-    <h1 class="mb-5 mt-5">Registruj se</h1>
-    <form method="post" style="width: 500px" class="centered">
-        {{ render_form(form) }}
-    </form>
+    <h1 class="mb-4 mt-4">Registruj se</h1>
+    <div>
+        <form method="post" action="{{ url_for('register') }}" style="width: 500px" class="centered">
+            {{ form.hidden_tag() }}
+            {{ render_field(form.username) }}
+            {{ render_field(form.email) }}
+            {{ render_field(form.password, style="width: 500px") }}
+            <div class="d-flex justify-content-end mt-2">
+                <button class="btn btn-secondary" type="button" id="togglePassword">
+                    Zobrazit
+                </button>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-md btn-primary">Registrovat</button>
+            </div>
+        </form>
+    </div>
     <p class="pt-4">Už máš účet? <a href="{{ url_for('login') }}" class="anchor_tag">Přihlas se.</a></p>
 </main>
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function (e) {
+        var passwordField = document.getElementById('{{ form.password.id }}');
+        var passwordFieldType = passwordField.getAttribute('type');
+        if (passwordFieldType === 'password') {
+            passwordField.setAttribute('type', 'text');
+            this.textContent = 'Skrýt';
+        } else {
+            passwordField.setAttribute('type', 'password');
+            this.textContent = 'Zobrazit';
+        }
+    });
+</script>
 {% endblock %}
