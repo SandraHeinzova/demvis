@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap5
 from sqlalchemy import select, func, or_
 from models import Meal, User, db, UserPreferences, Favorite
-# from models import dummy_records
+from models import dummy_records
 from smtp_email import send_email
 from forms import LoginForm, NewMealForm, RegisterForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -21,8 +21,9 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
-    # db.session.add_all(dummy_records)
-    # db.session.commit()
+    if not db.session.query(Meal).first():
+        db.session.add_all(dummy_records)
+        db.session.commit()
 
 bootstrap = Bootstrap5(app)
 
@@ -293,4 +294,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=4000)
+    app.run(debug=True, port=10000, host='0.0.0.0')
