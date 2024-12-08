@@ -9,6 +9,7 @@ from smtp_email import send_email
 from forms import LoginForm, NewMealForm, RegisterForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import pdfkit
+import os
 
 days = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota", "Neděle"]
 day_pairs = [["Pondělí", "Úterý"], ["Středa", "Čtvrtek"], ["Pátek", "Sobota"], ["Neděle"]]
@@ -16,8 +17,11 @@ day_pairs = [["Pondělí", "Úterý"], ["Středa", "Čtvrtek"], ["Pátek", "Sobo
 app = Flask(__name__)
 app.secret_key = "my-secretkey"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///demvis.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db.init_app(app)
+
 
 with app.app_context():
     db.create_all()
