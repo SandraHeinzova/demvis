@@ -276,7 +276,7 @@ def send():
         with open("menu.pdf", "rb") as f:
             pdf_data = f.read()
 
-        send_email(send_to=send_to, pdf_data=pdf_data)
+        # send_email(send_to=send_to, pdf_data=pdf_data)
 
         return jsonify({'status': 'success', 'message': 'Menu již letí do mailu'})
 
