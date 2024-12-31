@@ -17,7 +17,7 @@ day_pairs = [["Pondělí", "Úterý"], ["Středa", "Čtvrtek"], ["Pátek", "Sobo
 app = Flask(__name__)
 app.secret_key = "my-secretkey"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///demvis.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
