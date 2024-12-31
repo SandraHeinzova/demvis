@@ -1,5 +1,8 @@
 from functools import wraps
+
+import requests
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap5
 from sqlalchemy import select, func, or_
@@ -10,6 +13,13 @@ from forms import LoginForm, NewMealForm, RegisterForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import pdfkit
 import os
+from supabase import create_client, Client
+
+username = "postgres.silbcbvabtexxnptohzy"
+password = "GCRebwXQmJBypWw2"
+host = "aws-0-eu-central-1.pooler.supabase.com"
+port = 5432
+database = "postgres"
 
 days = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota", "Neděle"]
 day_pairs = [["Pondělí", "Úterý"], ["Středa", "Čtvrtek"], ["Pátek", "Sobota"], ["Neděle"]]
@@ -17,11 +27,18 @@ day_pairs = [["Pondělí", "Úterý"], ["Středa", "Čtvrtek"], ["Pátek", "Sobo
 app = Flask(__name__)
 app.secret_key = "my-secretkey"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///demvis.db"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+SUPABASE_URL = "https://silbcbvabtexxnptohzy.supabase.co"
+SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpbGJjYnZhYnRleHhucHRvaHp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0MDIzMDUsImV4cCI6MjA1MDk3ODMwNX0.MW9lFBQHmVxn0yy661yWcN8wSIPVcs8bSw0p0qoSVLY"
 
-db.init_app(app)
 
+app.config['SUPABASE_URL'] = SUPABASE_URL
+app.config['SUPABASE_KEY'] = SUPABASE_API_KEY
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}"
+app.config['SQLALCHEMY_ECHO'] = True
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_API_KEY)
+
+db = SQLAlchemy(app)
 
 with app.app_context():
     db.create_all()
