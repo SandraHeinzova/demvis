@@ -1,3 +1,4 @@
+import base64
 from functools import wraps
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -5,7 +6,7 @@ from flask_bootstrap import Bootstrap5
 from sqlalchemy import select, func, or_
 from models import Meal, User, db, UserPreferences, Favorite
 from models import dummy_records
-from smtp_email import send_email
+from sendgrid_email import send_email
 from forms import LoginForm, NewMealForm, RegisterForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import pdfkit
@@ -279,7 +280,9 @@ def send():
         with open("menu.pdf", "rb") as f:
             pdf_data = f.read()
 
-        # send_email(send_to=send_to, pdf_data=pdf_data)
+        encoded_pdf = base64.b64encode(pdf_data).decode('utf-8')
+
+        send_email(send_to=send_to, pdf_data=encoded_pdf)
 
         return jsonify({'status': 'success', 'message': 'Menu již letí do mailu'})
 
