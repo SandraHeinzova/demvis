@@ -1,8 +1,5 @@
 from functools import wraps
-
-import requests
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap5
 from sqlalchemy import select, func, or_
@@ -13,28 +10,23 @@ from forms import LoginForm, NewMealForm, RegisterForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import pdfkit
 import os
-from supabase import create_client, Client
 from dotenv import load_dotenv
 
 
 days = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota", "Neděle"]
 day_pairs = [["Pondělí", "Úterý"], ["Středa", "Čtvrtek"], ["Pátek", "Sobota"], ["Neděle"]]
 
-app = Flask(__name__)
-app.secret_key = "my-secretkey"
 load_dotenv()
+app = Flask(__name__)
+app.secret_key = os.getenv("secret_key_flask")
+
 
 app.config['SUPABASE_URL'] = os.getenv("SUPABASE_URL")
 app.config['SUPABASE_KEY'] = os.getenv("SUPABASE_API_KEY")
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://{os.getenv('username')}:{os.getenv('password')}@{os.getenv('host')}:{os.getenv('port')}/{os.getenv('database')}"
-app.config['SQLALCHEMY_ECHO'] = True
-
-supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_API_KEY"))
-
-
-db = SQLAlchemy(app)
 
 with app.app_context():
+    db.init_app(app)
     db.create_all()
     if not db.session.query(Meal).first():
         db.session.add_all(dummy_records)
