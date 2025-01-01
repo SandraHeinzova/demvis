@@ -30,7 +30,7 @@ class Meal(Base):
 
     __table_args__ = (
         CheckConstraint(
-            "(meat IS NOT NULL) OR (vegetarian = 1)",
+            "(meat IS NOT NULL) OR (vegetarian = TRUE)",
             name="check_meat_or_vegetarian_true"
         ),
     )
