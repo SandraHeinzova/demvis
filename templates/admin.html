@@ -48,11 +48,18 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label for="meatInput" class="form-label">Druh masa:</label>
-                                                <input type="text" class="form-control" id="meatInput" name="meat" required>
+                                                <select type="text" class="form-control" id="meatInput" name="meat" required>
+                                                    <option value="Kuřecí">Kuřecí</option>
+                                                    <option value="Hovězí">Hovězí</option>
+                                                    <option value="Vepřové">Vepřové</option>
+                                                </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="vegetarianInput" class="form-label">Vegetariánské:</label>
-                                                <input type="text" class="form-control" id="vegetarianInput" name="vegetarian" required>
+                                                <select type="text" class="form-control" id="vegetarianInput" name="vegetarian" required>
+                                                    <option value="TRUE">Ano</option>
+                                                    <option value="FALSE">Ne</option>
+                                                </select>
                                             </div>
                                             <button type="submit" name="action" value="edit" class="btn btn-sm btn-secondary">Ulož</button>
                                         </form>
