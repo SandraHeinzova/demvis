@@ -22,9 +22,8 @@ app = Flask(__name__)
 app.secret_key = os.getenv("secret_key_flask")
 
 
-app.config['SUPABASE_URL'] = os.getenv("SUPABASE_URL")
-app.config['SUPABASE_KEY'] = os.getenv("SUPABASE_API_KEY")
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://{os.getenv('username')}:{os.getenv('password')}@{os.getenv('host')}:{os.getenv('port')}/{os.getenv('database')}"
+
 
 with app.app_context():
     db.init_app(app)
