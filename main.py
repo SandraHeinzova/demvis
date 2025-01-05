@@ -22,7 +22,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("secret_key_flask")
 
 uri = f"postgresql+psycopg2://{os.getenv('username')}:{os.getenv('password')}@{os.getenv('host')}:{os.getenv('port')}/{os.getenv('database')}"
-print(uri)
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = uri
 

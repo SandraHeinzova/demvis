@@ -6,42 +6,43 @@
 {% block head %}
 <script>
 
-        function toggleMeatField() {
-            var vegetarianSelect = document.getElementById('vegetarian');
-            var meatSelect = document.getElementById('meat');
-            if (vegetarianSelect.value == 'Ano') {
-                meatSelect.value = "";
-                meatSelect.disabled = true;
-            } else {
-                meatSelect.value = "Kuřecí";
-                meatSelect.disabled = false;
-            }
+    function toggleMeatField() {
+        var vegetarianSelect = document.getElementById('vegetarian');
+        var meatSelect = document.getElementById('meat');
+        if (vegetarianSelect.value == 'Ano') {
+            meatSelect.value = "";
+            meatSelect.disabled = true;
+        } else {
+            meatSelect.value = "Kuřecí";
+            meatSelect.disabled = false;
         }
+    }
 
-        window.onload = function() {
-            toggleMeatField();
-            document.getElementById('vegetarian').addEventListener('change', toggleMeatField);
-        }
-    </script>
+    window.onload = function () {
+        toggleMeatField();
+        document.getElementById('vegetarian').addEventListener('change', toggleMeatField);
+    }
+</script>
 {% endblock %}
 
 {% block content %}
 <main class="pb-auto">
-    <h1 class="mb-5 mt-5">Přidej nové jídlo do seznamu</h1>
+    <h1 class="mt-4">Přidej nové jídlo do seznamu</h1>
+    <h2 class="mb-5">Pokud lze, prosím bez přílohy</h2>
     <form method="post" style="width: 500px" class="centered">
         <div>{{ render_form(form) }}</div>
     </form>
     <div class="container">
-            {% with messages = get_flashed_messages(category_filter=["success"]) %}
-              {% if messages %}
-                <div id="flash-popup" class="alert alert-success" role="alert">
-                {% for message in messages %}
-                  <div class="alert-heading">{{ message }}</div>
-                {% endfor %}
-            </div>
-              {% endif %}
-            {% endwith %}
+        {% with messages = get_flashed_messages(category_filter=["success"]) %}
+        {% if messages %}
+        <div id="flash-popup" class="alert alert-success" role="alert">
+            {% for message in messages %}
+            <div class="alert-heading">{{ message }}</div>
+            {% endfor %}
         </div>
+        {% endif %}
+        {% endwith %}
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
